@@ -37,7 +37,13 @@ body.timerdone {
   let flipped = false;
   let finished = false;
 
-  $('body').addEventListener('pointerdown', handleClick);
+  try {
+    // If this is a touch-supported device
+    document.createEvent("TouchEvent");
+    $('body').addEventListener('touchstart', handleClick);
+  } catch (e) {
+    $('body').addEventListener('mousedown', handleClick);
+  }
 
   function handleClick(e) {
     e.preventDefault();
