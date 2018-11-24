@@ -1,6 +1,6 @@
 <meta name="viewport" content="width=device-width; initial-scale=1.0; maximum-scale=1.0;">
 <body class=hourglass>
-  <span class=minutes>0</span>:<span class=seconds>00</span>
+  <span class=fill></span>
 </body>
 <style>
 .hourglass {
@@ -10,51 +10,62 @@
   font-size: 120px;
 }
 
-.danger {
-  color: red;
+.fill {
+  position: absolute;
+  background-color: black;
+  left: 0;
+  right: 0;
 }
+
+.fill:not(.flipped) {
+  bottom: 0;
+}
+
+.fill.flipped {
+  top: 0;
+}
+
+.timerdone .fill {
+  background-color: red;
+}
+
+body.timerdone {
+  background-color: red;
+}
+
 </style>
 
 <script>
   const $ = document.querySelector.bind(document);
 
-  const totaltime = 180;
-  let timeleft = totaltime; // seconds!
-
-  render();
-
-  let tick = setTimeout(doTick, 1000);
-
-  function doTick() {
-    clearTimeout(tick);
-    tick = 0;
-    --timeleft;
-    render();
-    if (timeleft)
-      tick = setTimeout(doTick, 1000);
-  }
+  const totaltime = 5;
+  let timestamp = Date.now();
+  let flipped = false;
+  let finished = false;
 
   $('body').addEventListener('click', () => {
-    if (timeleft) {
-      timeleft = totaltime - timeleft;
-      render();
-      return;
+    if (finished) {
+      // resetting time
+      flipped = false;
+      timestamp = Date.now();
+    } else {
+      // flipping time
+      flipped = !flipped;
+      let timeleft = totaltime * 1000 - (Date.now() - timestamp);
+      timestamp = Date.now() - timeleft;
     }
-    // Resetting time.
-    timeleft = totaltime;
-    render();
-    clearTimeout(tick);
-    tick = setTimeout(doTick, 1000);
   });
 
+  let fillElement = $('.fill');
+  render();
+
   function render() {
-    $('body').classList.toggle('danger', timeleft < 10);
-    const minutes = (timeleft / 60) | 0;
-    const seconds = timeleft % 60;
-    const sec1 = (seconds / 10) | 0;
-    const sec2 = seconds % 10;
-    $('.minutes').textContent = minutes;
-    $('.seconds').textContent = sec1 + '' + sec2;
+    fillElement.classList.toggle('flipped', flipped);
+    let timeleft = totaltime - (Date.now() - timestamp) / 1000;
+    finished = timeleft <= 0;
+    $('body').classList.toggle('timerdone', finished);
+    fillElement.style.setProperty('height', (timeleft / totaltime * 100) + 'vh');
+    requestAnimationFrame(render);
   }
 </script>
 
