@@ -1,6 +1,6 @@
 <meta name="viewport" content="width=device-width; initial-scale=1.0; maximum-scale=1.0;">
 <body>
-v0.1
+v0.2
   <span class=fill></span>
 </body>
 <style>
@@ -32,12 +32,15 @@ body.timerdone {
 <script>
   const $ = document.querySelector.bind(document);
 
-  const totaltime = 5;
+  const totaltime = 180;
   let timestamp = Date.now();
   let flipped = false;
   let finished = false;
 
-  $('body').addEventListener('click', () => {
+  $('body').addEventListener('click', handleClick);
+  $('body').addEventListener('touchstart', handleClick);
+
+  function handleClick() {
     if (finished) {
       // resetting time
       flipped = false;
@@ -48,7 +51,7 @@ body.timerdone {
       let timeleft = totaltime * 1000 - (Date.now() - timestamp);
       timestamp = Date.now() - timeleft;
     }
-  });
+  }
 
   let fillElement = $('.fill');
   render();
