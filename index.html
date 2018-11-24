@@ -7,10 +7,10 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 60px;
+  font-size: 120px;
 }
 
-.timerdone {
+.danger {
   color: red;
 }
 </style>
@@ -43,10 +43,7 @@
   });
 
   function render() {
-    if (!timeleft) {
-      $('body').classList.add('timerdone');
-      return;
-    }
+    $('body').classList.toggle('danger', timeleft < 10);
     const minutes = (timeleft / 60) | 0;
     const seconds = timeleft % 60;
     const sec1 = (seconds / 10) | 0;
