@@ -20,26 +20,31 @@
 
   const totaltime = 180;
   let timeleft = totaltime; // seconds!
+
   render();
 
-  setTimeout(countSecond, 1000);
+  let tick = setTimeout(doTick, 1000);
 
-  function countSecond() {
+  function doTick() {
+    clearTimeout(tick);
+    tick = 0;
     --timeleft;
     render();
     if (timeleft)
-      setTimeout(countSecond, 1000);
+      tick = setTimeout(doTick, 1000);
   }
 
   $('body').addEventListener('click', () => {
     if (timeleft) {
       timeleft = totaltime - timeleft;
       render();
-    } else {
-      timeleft = totaltime;
-      render();
-      setTimeout(countSecond, 1000);
+      return;
     }
+    // Resetting time.
+    timeleft = totaltime;
+    render();
+    clearTimeout(tick);
+    tick = setTimeout(doTick, 1000);
   });
 
   function render() {
