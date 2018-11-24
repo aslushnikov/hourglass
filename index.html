@@ -3,11 +3,14 @@
   <span class=fill></span>
 </body>
 <style>
+* {
+  cursor: pointer;
+}
+
 body {
   display: flex;
   align-items: center;
   justify-content: center;
-  cursor: pointer;
 }
 
 .fill {
@@ -15,7 +18,6 @@ body {
   background-color: black;
   left: 0;
   right: 0;
-  cursor: pointer;
 }
 
 .fill:not(.flipped) {
@@ -24,10 +26,6 @@ body {
 
 .fill.flipped {
   top: 0;
-}
-
-.timerdone .fill {
-  background-color: red;
 }
 
 body.timerdone {
