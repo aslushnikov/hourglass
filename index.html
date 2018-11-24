@@ -1,6 +1,6 @@
 <meta name="viewport" content="width=device-width; initial-scale=1.0; maximum-scale=1.0;">
 <body>
-v0.4
+v0.5
   <span class=fill></span>
 </body>
 <style>
@@ -37,7 +37,7 @@ body.timerdone {
   let flipped = false;
   let finished = false;
 
-  $('body').addEventListener('click', handleClick);
+  $('body').addEventListener('mousedown', handleClick);
   $('body').addEventListener('touchstart', handleClick);
 
   function handleClick(e) {
