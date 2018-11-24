@@ -1,30 +1,19 @@
 <meta name="viewport" content="width=device-width; initial-scale=1.0; maximum-scale=1.0;">
 <body>
-v0.6
-  <span class=fill></span>
+  <span class=minutes></span>:<span class=seconds>00</span>
 </body>
 <style>
-* {
-  cursor: pointer;
-}
-
-.fill {
-  position: absolute;
-  background-color: black;
-  left: 0;
-  right: 0;
-}
-
-.fill:not(.flipped) {
-  bottom: 0;
-}
-
-.fill.flipped {
-  top: 0;
+body {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 120px;
+  color: #333;
 }
 
 body.timerdone {
   background-color: red;
+  color: white;
 }
 
 </style>
@@ -32,10 +21,8 @@ body.timerdone {
 <script>
   const $ = document.querySelector.bind(document);
 
-  const totaltime = 18;
-  let timestamp = Date.now();
-  let flipped = false;
-  let finished = false;
+  const totaltime = 180;
+  let timeleft = totaltime;
 
   try {
     // If this is a touch-supported device
@@ -45,31 +32,31 @@ body.timerdone {
     $('body').addEventListener('mousedown', handleClick);
   }
 
-  function handleClick(e) {
-    e.preventDefault();
-    e.stopPropagation();
-    if (finished) {
-      // resetting time
-      flipped = false;
-      timestamp = Date.now();
-    } else {
+  function handleClick() {
+    if (timeleft) {
       // flipping time
-      flipped = !flipped;
-      let timeleft = totaltime * 1000 - (Date.now() - timestamp);
-      timestamp = Date.now() - timeleft;
+      timeleft = totaltime - timeleft;
+    } else {
+      // resetting time
+      timeleft = totaltime;
     }
+    render();
   }
 
-  let fillElement = $('.fill');
+  setInterval(() => {
+    if (timeleft) {
+      --timeleft;
+      render();
+    }
+  }, 1000);
+
   render();
 
   function render() {
-    fillElement.classList.toggle('flipped', flipped);
-    let timeleft = totaltime - (Date.now() - timestamp) / 1000;
-    finished = timeleft <= 0;
-    $('body').classList.toggle('timerdone', finished);
-    fillElement.style.setProperty('height', (timeleft / totaltime * 100) + 'vh');
-    requestAnimationFrame(render);
+    $('body').classList.toggle('timerdone', timeleft === 0);
+    $('.minutes').textContent = (timeleft / 60)|0;
+    $('.seconds').textContent = ((timeleft % 60) / 10)|0;
+    $('.seconds').textContent += ((timeleft % 60) % 10)|0;
   }
 </script>
 
